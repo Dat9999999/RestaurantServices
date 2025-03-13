@@ -19,8 +19,24 @@ const createOrderDetails = async (orderID, orderDetails) =>
     // Thực hiện chèn dữ liệu hàng loạt
     await pool.query(sql, [values]);
 }
+const updateNotes = async (orderId, notes) =>
+{
+    await pool.execute(`UPDATE orders SET notes =? WHERE orderID =?`,
+        [notes, orderId])
+}
+const updateOrderDetails = async (reqOrderDetails) =>
+{
+    const promises = reqOrderDetails.map(item =>
+    {
+        const sql = "UPDATE orderDetails SET dishId = ?, quantity = ? WHERE id = ?";
+        return pool.query(sql, [item.dishId, item.quantity, item.id]);
+    });
+    await Promise.all(promises);
+}
 
 module.exports = {
     createOrder,
-    createOrderDetails
+    createOrderDetails,
+    updateNotes,
+    updateOrderDetails
 }

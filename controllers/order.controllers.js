@@ -18,6 +18,30 @@ const createOrder = async (req, res) =>
     }
 }
 
+const updateOrder = async (req, res) =>
+{
+    try
+    {
+        const orderID = req.params.id
+        const { notes, orderDetails } = req.body
+        await orderService.updateNotes(orderID, notes)
+
+
+        await orderService.updateOrderDetails(orderDetails)
+        res.status(200).json({ "success": true, "message": "Sửa đơn hàng thành công" })
+
+    }
+    catch (err)
+    {
+        console.log(err)
+        res.status(400).json({ "success": false, "message": "Sửa đơn hàng thất bại" })
+
+    }
+
+}
+
+
 module.exports = {
-    createOrder
+    createOrder,
+    updateOrder
 }
