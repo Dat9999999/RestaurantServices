@@ -35,6 +35,23 @@ const getAll = async (reqPage, reqLimit) =>
     }
 }
 
+const changeDishStatus = async (id) =>
+{
+    // Lấy trạng thái hiện tại của món ăn
+    const [rows] = await pool.execute(`SELECT isAvailable FROM dishes WHERE id = ?`, [id]);
+    if (rows.length === 0)
+    {
+        throw new Error("Món ăn không tồn tại");
+    }
+
+    const currentStatus = rows[0].isAvailable;
+    const newStatus = currentStatus === 1 ? 0 : 1;
+
+    // Cập nhật trạng thái
+    await pool.execute(`UPDATE dishes SET isAvailable = ? WHERE id = ?`, [newStatus, id]);
+}
+
 module.exports = {
-    getAll
+    getAll,
+    changeDishStatus
 }

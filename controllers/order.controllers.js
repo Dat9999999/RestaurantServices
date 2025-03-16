@@ -19,6 +19,7 @@ const createOrder = async (req, res) =>
     }
 }
 
+//Edit order before prepared
 const updateOrder = async (req, res) =>
 {
     try
@@ -89,9 +90,36 @@ const canceledOrder = async (req, res) =>
         return res.status(400).json({ "success": false, "message": "Hủy đơn hàng thất bại" })
     }
 }
+
+const orderPrepared = async (req, res) =>
+{
+    try
+    {
+        const id = req.params.id
+        await orderService.orderPrepared(id)
+        res.status(200).json({ "success": true, "message": "Hoàn tất chuẩn bị món" })
+    } catch (error)
+    {
+        console.log(error)
+        res.status(400).json({ "success": false, "message": "Xác nhận hoàn tất thất bại" })
+    }
+}
+const getOrdersToKitchen = async (req, res) =>
+{
+    try
+    {
+        const listOrder = await orderService.getPendingOrders();
+        console.log(listOrder)
+    } catch (error)
+    {
+        console.log(error)
+    }
+}
 module.exports = {
     createOrder,
     updateOrder,
     completeOrder,
-    canceledOrder
+    canceledOrder,
+    getOrdersToKitchen,
+    orderPrepared
 }

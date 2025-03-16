@@ -64,6 +64,17 @@ const getOrderById = async (id) =>
     const [row] = await pool.execute(`SELECT * FROM orders WHERE orderID = ?`, [id])
     return row.length > 0 ? row[0] : null;
 }
+
+const getPendingOrders = async () =>
+{
+    const [rows] = await pool.execute("SELECT * FROM orders WHERE status= 'pending'")
+    return rows.length > 0 ? rows : null
+}
+
+const orderPrepared = async (id) =>
+{
+    await pool.execute("UPDATE orders SET status = 'prepared' WHERE orderID =?", [id])
+}
 module.exports = {
     createOrder,
     createOrderDetails,
@@ -74,5 +85,7 @@ module.exports = {
     getTotalAmount,
     getOrderDetailv2,
     completeOrder,
-    getOrderById
+    getOrderById,
+    getPendingOrders,
+    orderPrepared
 }
